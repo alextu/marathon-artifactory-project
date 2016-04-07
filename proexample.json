@@ -1,0 +1,5 @@
+{
+  "artifactory": {
+    "virtual-host": "public ip of your loadbalancer"
+  }
+}
