@@ -1,0 +1,17 @@
+{
+  "artifactory-primary": {
+    "virtual-host": "<Public LoadBalancer Url>",
+    "high-availability": {
+        "enabled" : true,
+        "nodes": 1,
+        "cluster-home" : "/var/data/artha",
+        "database" : {
+            "connection-string" : "jdbc:mysql://localhost:3306/artdb?characterEncoding=UTF-8&elideSetAutoCommits=true",
+            "user" : "root",
+            "password" : "root"
+        }
+    },
+    "artifactory-primary-license" : "License for Artifactory Primary",
+    "artifactory-licenses" : "Licenses for Artifactory. Comma saparated."
+  }
+}
