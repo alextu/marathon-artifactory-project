@@ -1,0 +1,16 @@
+{
+  "artifactory-secondary": {
+    "virtual-host": "Name of Public loadBalancer",
+    "high-availability": {
+        "enabled" : true,
+        "nodes": 1,
+        "cluster-home" : "/var/data/artha",
+        "database" : {
+            "connection-string" : "jdbc:mysql://localhost:3306/artdb?characterEncoding=UTF-8&elideSetAutoCommits=true",
+            "user" : "root",
+            "password" : "root"
+        }
+    },
+    "artifactory-primary-url" : "URL of Primary-Artifactory"
+  }
+}
