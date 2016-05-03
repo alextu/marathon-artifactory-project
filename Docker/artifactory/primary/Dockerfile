@@ -1,5 +1,5 @@
 # Dockerfile for a primary node
-FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.3
+FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.5
 MAINTAINER alexist@jfrog.com
 
 ENV ARTIFACTORY_HOME /var/opt/jfrog/artifactory
@@ -18,7 +18,8 @@ RUN cp -R $ARTIFACTORY_HOME/etc/* $CLUSTER_HOME/ha-etc/.
 
 # Installing the bucket plugin
 RUN mkdir -p $ARTIFACTORY_HOME/etc/plugins
-RUN curl -o $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy https://raw.githubusercontent.com/alextu/artifactory-user-plugins/licensesBucket/ha/licensesBucket/licensesBucket.groovy
+#RUN curl -o $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy https://raw.githubusercontent.com/alextu/artifactory-user-plugins/licensesBucket/ha/licensesBucket/licensesBucket.groovy
+COPY licensesBucket.groovy $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy
 
 # Still needed ?
 COPY server.xml /opt/jfrog/artifactory/tomcat/conf/server.xml

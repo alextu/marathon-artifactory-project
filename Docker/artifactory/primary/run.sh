@@ -5,7 +5,7 @@ ha_home=/var/opt/jfrog/cluster
 node="art-primary"
 
 # Set the licence key
-echo "$ART_PRIMARY_LICENSE" > /etc/opt/jfrog/artifactory/artifactory.lic
+echo -n "$ART_PRIMARY_LICENSE" > /etc/opt/jfrog/artifactory/artifactory.lic
 
 # Create the cluster.properties the first time
 if [ ! -f $ha_home/ha-etc/cluster.properties ]; then
@@ -32,5 +32,3 @@ membership.port=10042
 EOF
 
 /opt/jfrog/artifactory/bin/artifactory.sh
-
-#. /etc/init.d/artifactory wait

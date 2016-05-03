@@ -1,5 +1,5 @@
 # Dockerfile for a primary node
-FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.3
+FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.5
 MAINTAINER alexist@jfrog.com
 
 ENV ARTIFACTORY_HOME /var/opt/jfrog/artifactory

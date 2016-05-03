@@ -16,14 +16,16 @@ echo "PRIMARY_BASE_URL : $PRIMARY_BASE_URL"
 
 echo "Checking availability first : $PRIMARY_BASE_URL"
 
-response=$(curl -uadmin:password -X POST $PRIMARY_BASE_URL/api/plugins/execute/getLicense?params=$node)
+response=$(curl -uadmin:password -S --fail -X POST $PRIMARY_BASE_URL/api/plugins/execute/getLicense?params=$node)
 responseStatus=$?
 if [ $responseStatus -ne 0 ]; then
 	echo "Couldn't retrieve the license from the primary, got response from server $response "
+	exit $responseStatus
 elif [ ! -z "$response" ]; then
-	echo "$response" > /etc/opt/jfrog/artifactory/artifactory.lic
+	echo -n "$response" > /etc/opt/jfrog/artifactory/artifactory.lic
 else
 	echo "License not found from primary"
+	exit $responseStatus
 fi
 
 /opt/jfrog/artifactory/bin/artifactory.sh
