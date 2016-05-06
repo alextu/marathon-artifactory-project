@@ -2,7 +2,10 @@
 
 ha_home=/var/opt/jfrog/cluster
 
-node=$(date +%s)
+: ${ART_LOGIN:=admin}
+: ${ART_PASSWORD:=password}
+
+node=$(date +%s$RANDOM)
 
 cat >/etc/opt/jfrog/artifactory/ha-node.properties <<EOF
 node.id="$node"
@@ -12,20 +15,54 @@ context.url=http://$(hostname -I|awk '{print $1}'):8081/artifactory
 membership.port=10042
 EOF
 
-echo "PRIMARY_BASE_URL : $PRIMARY_BASE_URL"
+function waitForPrimaryNode {
+	log "WAITING FOR PRIMARY NODE : $PRIMARY_BASE_URL"
+	until $(curl -u$ART_LOGIN:$ART_PASSWORD --output /dev/null --silent --fail "$PRIMARY_BASE_URL/api/system/ping")
+	do
+		echo "."
+		sleep 2
+	done
+	log "PRIMARY NODE IS UP !"
+}
 
-echo "Checking availability first : $PRIMARY_BASE_URL"
+function log {
+	echo "[SECONDARY $node] $1"
+}
 
-response=$(curl -uadmin:password -S --fail -X POST $PRIMARY_BASE_URL/api/plugins/execute/getLicense?params=$node)
-responseStatus=$?
-if [ $responseStatus -ne 0 ]; then
-	echo "Couldn't retrieve the license from the primary, got response from server $response "
-	exit $responseStatus
-elif [ ! -z "$response" ]; then
-	echo -n "$response" > /etc/opt/jfrog/artifactory/artifactory.lic
-else
-	echo "License not found from primary"
-	exit $responseStatus
-fi
+function getLicenseFromPrimary {
+	local response=$(curl -u$ART_LOGIN:$ART_PASSWORD -S --fail -X POST $PRIMARY_BASE_URL/api/plugins/execute/getLicense?params=$node)
+	local responseStatus=$?
+	if [ $responseStatus -ne 0 ]; then
+		log "Couldn't retrieve the license from the primary, got response from server $response "
+		echo $responseStatus
+	elif [ ! -z "$response" ]; then
+		echo -n "$response" > /etc/opt/jfrog/artifactory/artifactory.lic
+		echo "0"
+	else
+		log "License not found from primary"
+		echo $responseStatus
+	fi	
+}
+
+function getLicenseFromPrimaryOrDieTrying {
+	local numberOfRetries=5
+	local retry=0
+	while [ "$retry" -lt "$numberOfRetries" ]; do
+		local lic=$(getLicenseFromPrimary)
+		echo "return code from getLic : $lic"
+		if [ "$lic" == "0" ]; then
+			return 0
+		fi
+		retry=$((retry+1))
+		log "Retry $retry getting license from primary in 3s"
+		sleep 3
+	done
+	log "Have tried $numberOfRetries to get a license from primary without success, now exiting"
+	exit 1
+}
+
+waitForPrimaryNode
+getLicenseFromPrimaryOrDieTrying
 
 /opt/jfrog/artifactory/bin/artifactory.sh
+

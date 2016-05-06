@@ -31,4 +31,10 @@ context.url=http://$(hostname -I|awk '{print $1}'):8081/artifactory
 membership.port=10042
 EOF
 
+# Wait for mysql
+# Extract mysql hostname and port from the jdbc url
+mysql_host_port=$(echo $DATABASE_CONNECTION_STRING | sed -e 's,^jdbc:mysql:\/\/\(.*\)$,\1:,g' | cut -d/ -f1)
+echo "mysql host : $mysql_host_port"
+while ! curl -s "$mysql_host_port" > /dev/null; do echo 'waiting for mysql'; sleep 3; done
+
 /opt/jfrog/artifactory/bin/artifactory.sh
