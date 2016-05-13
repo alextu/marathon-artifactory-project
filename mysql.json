@@ -1,18 +1,58 @@
 {
-    "id": "/mysql",
-    "instances": 1,
-    "container": {
-        "type": "DOCKER",
-        "docker": {
-            "image": "mysql:latest",
-            "network": "HOST"
+  "id": "/mysql",
+  "cmd": null,
+  "cpus": 1,
+  "mem": 2048,
+  "disk": 0,
+  "instances": 1,
+  "container": {
+    "type": "DOCKER",
+    "volumes": [
+      {
+        "containerPath": "mysqldata",
+        "mode": "RW",
+        "persistent": {
+          "size": 2000
         }
-    },
-    "env": {
-        "MYSQL_ROOT_PASSWORD": "jfrog",
-        "MYSQL_DATABASE": "artdb"
-        }, 
-    "ports": [3306],
-    "cpus": 0.5,
-    "mem": 256.0
+      },
+      {
+        "containerPath": "/var/lib/mysql",
+        "hostPath": "mysqldata",
+        "mode": "RW"
+      }
+    ],
+    "docker": {
+      "image": "mysql",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 3306,
+          "hostPort": 3306,
+          "servicePort": 10000,
+          "protocol": "tcp",
+          "labels": {}
+        }
+      ],
+      "privileged": false,
+      "parameters": [],
+      "forcePullImage": false
+    }
+  },
+  "env": {
+    "MYSQL_PASSWORD": "Password",
+    "MYSQL_ROOT_PASSWORD": "Password",
+    "MYSQL_USER": "user",
+    "MYSQL_DATABASE": "artdb"
+  },
+  "portDefinitions": [
+    {
+      "port": 10000,
+      "protocol": "tcp",
+      "labels": {}
+    }
+  ],
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 0,
+    "maximumOverCapacity": 0
+  }
 }
