@@ -9,15 +9,15 @@ ENV ART_TOMCAT_HOME /opt/jfrog/artifactory
 COPY run.sh /run.sh
 
 # set up mysql in artifactory
-RUN curl -L -o $ARTIFACTORY_HOME/tomcat/lib/mysql-connector-java-5.1.38.jar https://bintray.com/artifact/download/bintray/jcenter/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar
-RUN cp $ARTIFACTORY_HOME/misc/db/mysql.properties $ARTIFACTORY_HOME/etc/storage.properties
+RUN curl -L -o $ARTIFACTORY_HOME/tomcat/lib/mysql-connector-java-5.1.38.jar https://bintray.com/artifact/download/bintray/jcenter/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar && \
+	cp $ARTIFACTORY_HOME/misc/db/mysql.properties $ARTIFACTORY_HOME/etc/storage.properties
 
 # Still needed ?
 COPY server.xml /opt/jfrog/artifactory/tomcat/conf/server.xml
 
 # Change permission to all this directories
-RUN chown -R artifactory: $ARTIFACTORY_HOME
-RUN chown -R artifactory: $ART_TOMCAT_HOME
+RUN chown -R artifactory: $ARTIFACTORY_HOME && \
+	chown -R artifactory: $ART_TOMCAT_HOME
 
 USER artifactory
 

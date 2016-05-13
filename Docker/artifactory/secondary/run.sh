@@ -47,7 +47,7 @@ function getLicenseFromPrimary {
 function getLicenseFromPrimaryOrDieTrying {
 	local numberOfRetries=5
 	local retry=0
-	local sleepingTime=10
+	local sleepingTime=15
 	while [ "$retry" -lt "$numberOfRetries" ]; do
 		local lic=$(getLicenseFromPrimary)
 		echo "return code from getLic : $lic"
