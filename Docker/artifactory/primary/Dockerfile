@@ -6,7 +6,7 @@ ENV ARTIFACTORY_HOME /var/opt/jfrog/artifactory
 ENV CLUSTER_HOME /var/opt/jfrog/cluster
 ENV ART_TOMCAT_HOME /opt/jfrog/artifactory
 # create the $CLUSTER_HOME directory structure and copy the files
-RUN mkdir -p $CLUSTER_HOME/{ha-etc/{UI,plugins},ha-data/{filestore,tmp},ha-backup}
+RUN mkdir $CLUSTER_HOME
 
 # copy the run script
 COPY run.sh /run.sh
@@ -14,12 +14,10 @@ COPY run.sh /run.sh
 # set up mysql in artifactory
 RUN curl -L -o $ARTIFACTORY_HOME/tomcat/lib/mysql-connector-java-5.1.38.jar https://bintray.com/artifact/download/bintray/jcenter/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar
 RUN cp $ARTIFACTORY_HOME/misc/db/mysql.properties $ARTIFACTORY_HOME/etc/storage.properties
-RUN cp -R $ARTIFACTORY_HOME/etc/* $CLUSTER_HOME/ha-etc/.
 
 # Installing the bucket plugin
 RUN mkdir -p $ARTIFACTORY_HOME/etc/plugins
-#RUN curl -o $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy https://raw.githubusercontent.com/alextu/artifactory-user-plugins/licensesBucket/ha/licensesBucket/licensesBucket.groovy
-COPY licensesBucket.groovy $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy
+COPY licensesBucket.groovy $ARTIFACTORY_HOME/etc/plugins/licensesBucket.groovy
 
 # Still needed ?
 COPY server.xml /opt/jfrog/artifactory/tomcat/conf/server.xml

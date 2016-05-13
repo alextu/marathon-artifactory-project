@@ -47,6 +47,7 @@ function getLicenseFromPrimary {
 function getLicenseFromPrimaryOrDieTrying {
 	local numberOfRetries=5
 	local retry=0
+	local sleepingTime=10
 	while [ "$retry" -lt "$numberOfRetries" ]; do
 		local lic=$(getLicenseFromPrimary)
 		echo "return code from getLic : $lic"
@@ -54,8 +55,8 @@ function getLicenseFromPrimaryOrDieTrying {
 			return 0
 		fi
 		retry=$((retry+1))
-		log "Retry $retry getting license from primary in 3s"
-		sleep 3
+		log "Retry $retry getting license from primary in $sleepingTime seconds"
+		sleep $sleepingTime
 	done
 	log "Have tried $numberOfRetries to get a license from primary without success, now exiting"
 	exit 1
