@@ -1,0 +1,47 @@
+{
+  "id": "/nginx",
+  "cmd": null,
+  "cpus": 0.25,
+  "mem": 256,
+  "disk": 0,
+  "instances": 2,
+  "constraints": [
+    [
+      "hostname",
+      "UNIQUE"
+    ]
+  ],
+  "acceptedResourceRoles": [
+    "slave_public"
+  ],
+  "container": {
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "alexistjfrog-docker-registry.bintray.io/artifactoryhanginx:1.10.0",
+      "network": "HOST",
+      "privileged": false,
+      "parameters": [],
+      "forcePullImage": true
+    }
+  },
+  "env": {
+    "ART_PRIMARY_NODE_HOST_PORT": "artifactory-primary.marathon.mesos:8081",
+    "ART_SERVER_NAME": "nginx.marathon.mesos",
+    "ART_REVERSE_PROXY_METHOD": "SUBDOMAIN",
+    "ART_LOGIN": "admin",
+    "ART_PASSWORD": "password"
+  },
+  "labels": {
+    "HAPROXY_0_VHOST": "url of Public load Balancer",
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_PORT": "80"
+  },
+  "portDefinitions": [
+    {
+      "port": 80,
+      "protocol": "tcp",
+      "labels": {}
+    }
+  ]
+}
