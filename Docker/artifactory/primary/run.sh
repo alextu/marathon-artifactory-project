@@ -7,12 +7,14 @@ node="art-primary"
 # Set the licence key
 echo -n "$ART_PRIMARY_LICENSE" > /etc/opt/jfrog/artifactory/artifactory.lic
 
-# Create the cluster.properties the first time
+# Create the cluster home content the first time
 if [ ! -f $CLUSTER_HOME/ha-etc/cluster.properties ]; then
 	mkdir -p $CLUSTER_HOME/{ha-etc/{UI,plugins},ha-data/{filestore,tmp},ha-backup}
     echo security.token=$(uuidgen) >$CLUSTER_HOME/ha-etc/cluster.properties
-    cp -R /var/opt/jfrog/artifactory/etc/* $CLUSTER_HOME/ha-etc/.
 fi
+
+# Copy the licensesBucket plugin into the cluster home (always do it in case of an update of the plugin in the image)
+cp -f /var/opt/jfrog/artifactory/etc/plugins/licensesBucket.groovy $CLUSTER_HOME/ha-etc/plugins/licensesBucket.groovy
 
 # Recreate the storage.propreties if the necessary env var are set
 if [ ! -z "$DATABASE_CONNECTION_STRING" ] && [ ! -z "$DATABASE_USER" ] && [ ! -z "$DATABASE_PASSWORD" ]; then
