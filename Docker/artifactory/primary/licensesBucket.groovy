@@ -12,7 +12,7 @@ final Bucket bucket = new Bucket(ContextHelper.get().beanForType(ArtifactoryServ
 bucket.loadLicensesFromEnv(System.getenv('ART_LICENSES'))
 
 executions {
-    getLicense() { params ->
+    getSecondaryLicense() { params ->
         if (!checkAccess()) {
             status = 403
         } else {
@@ -126,7 +126,7 @@ public class Bucket {
         String licenseKey
         if (availableLicenses) {
             String availableLicenseHash = availableLicenses ? availableLicenses?.first() : null
-            log.warn "Hash of availabel license ${availableLicenseHash}"
+            log.warn "Hash of available license ${availableLicenseHash}"
             License license = licenses.find({ it.keyHash == availableLicenseHash })
             licenseKey = license?.key
             licenseRequests << new LicenseRequest(license: license)

@@ -30,7 +30,7 @@ function log {
 }
 
 function getLicenseFromPrimary {
-	local response=$(curl -u$ART_LOGIN:$ART_PASSWORD -S --fail -X POST $PRIMARY_BASE_URL/api/plugins/execute/getLicense?params=$node)
+	local response=$((curl -u$ART_LOGIN:$ART_PASSWORD --show-error --silent --fail -X POST $PRIMARY_BASE_URL/api/plugins/execute/getSecondaryLicense?params=$node) 2>&1)
 	local responseStatus=$?
 	if [ $responseStatus -ne 0 ]; then
 		log "Couldn't retrieve the license from the primary, got response from server $response "
