@@ -1,5 +1,5 @@
 # Dockerfile for a primary node
-FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.6
+FROM jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:4.7.7
 MAINTAINER alexist@jfrog.com
 
 ENV ARTIFACTORY_HOME /var/opt/jfrog/artifactory
@@ -16,7 +16,7 @@ RUN mkdir $CLUSTER_HOME && \
 	cp $ARTIFACTORY_HOME/misc/db/mysql.properties $ARTIFACTORY_HOME/etc/storage.properties && \
 # Installing the bucket plugin (will be move at runtime to cluster home)
 	mkdir -p $ARTIFACTORY_HOME/etc/plugins
-	
+
 COPY licensesBucket.groovy $ARTIFACTORY_HOME/etc/plugins/licensesBucket.groovy
 
 # Still needed ?
