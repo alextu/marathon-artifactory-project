@@ -32,11 +32,6 @@
     "ART_LOGIN": "admin",
     "ART_PASSWORD": "password"
   },
-  "labels": {
-    "HAPROXY_0_VHOST": "url of Public load Balancer",
-    "HAPROXY_GROUP": "external",
-    "HAPROXY_0_PORT": "80"
-  },
   "portDefinitions": [
     {
       "port": 80,
