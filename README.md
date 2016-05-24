@@ -31,6 +31,9 @@ If you don't specify options, by default it will run one artifactory-pro instanc
 - Run secondary node
 `docker run -ti -v artclusterhome:/var/opt/jfrog/cluster --link mysqlart:mysqlart --link artifactoryhaprimary:artifactoryhaprimary -e PRIMARY_BASE_URL='http://artifactoryhaprimary:8081/artifactory' -p 8088:8081 artifactoryhasecondary:4.7.5`
 
+- Run Nginx as LB
+`docker run -d -p 80:80 --link artifactoryhaprimary:artifactoryhaprimary -e ART_PRIMARY_NODE_HOST_PORT='192.168.99.100:8089' -e ART_SERVER_NAME='192.168.99.100' -e ART_REVERSE_PROXY_METHOD='SUBDOMAIN' -e ART_LOGIN='admin' -e ART_PASSWORD='password' alexistjfrog-docker-registry.bintray.io/artifactoryhanginx:1.10.0 `
+
 - Connect to mysql
 `docker run -it --link mysqlart:mysqlart --net nginxproxy_default --rm mysql sh -c 'exec mysql -h"mysqlart" -P"3306" -uroot -p"jfrog"'
 `
